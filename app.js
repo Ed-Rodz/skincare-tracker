@@ -1,9 +1,12 @@
-function getTodayKey() {
-  const now = new Date();
-  const y = now.getFullYear();
-  const m = String(now.getMonth() + 1).padStart(2, "0");
-  const d = String(now.getDate()).padStart(2, "0");
+function formatDateKey(date) {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, "0");
+  const d = String(date.getDate()).padStart(2, "0");
   return `${y}-${m}-${d}`;
+}
+
+function getTodayKey() {
+  return formatDateKey(new Date());
 }
 
 function isOddDate() {
@@ -82,7 +85,60 @@ function saveState(todayKey, state) {
   localStorage.setItem(`skincare-${todayKey}`, JSON.stringify(state));
 }
 
-function renderList(listEl, steps, state, todayKey) {
+function loadCompletedDays() {
+  const raw = localStorage.getItem("skincare-completed-days");
+  return raw ? JSON.parse(raw) : {};
+}
+
+function saveCompletedDays(completedDays) {
+  localStorage.setItem("skincare-completed-days", JSON.stringify(completedDays));
+}
+
+function isFullyComplete(state, am, pm) {
+  return [...am, ...pm].every((step) => !!state[step.id]);
+}
+
+function updateCompletionRecord(todayKey, state, am, pm) {
+  const completedDays = loadCompletedDays();
+  const complete = isFullyComplete(state, am, pm);
+
+  if (complete) {
+    completedDays[todayKey] = true;
+  } else {
+    delete completedDays[todayKey];
+  }
+
+  saveCompletedDays(completedDays);
+  return completedDays;
+}
+
+function computeStreak(completedDays) {
+  const cursor = new Date();
+  const todayKey = formatDateKey(cursor);
+
+  if (!completedDays[todayKey]) {
+    cursor.setDate(cursor.getDate() - 1);
+  }
+
+  let streak = 0;
+  while (completedDays[formatDateKey(cursor)]) {
+    streak++;
+    cursor.setDate(cursor.getDate() - 1);
+  }
+
+  return streak;
+}
+
+function renderStreak(streak) {
+  const streakEl = document.getElementById("streak");
+  if (streak > 0) {
+    streakEl.textContent = `🔥 ${streak} day${streak === 1 ? "" : "s"}`;
+  } else {
+    streakEl.textContent = "";
+  }
+}
+
+function renderList(listEl, steps, state, todayKey, am, pm) {
   listEl.innerHTML = "";
 
   steps.forEach((step) => {
@@ -129,6 +185,9 @@ function renderList(listEl, steps, state, todayKey) {
       checkbox.checked = state[step.id];
       li.classList.toggle("done", state[step.id]);
       saveState(todayKey, state);
+
+      const completedDays = updateCompletionRecord(todayKey, state, am, pm);
+      renderStreak(computeStreak(completedDays));
     };
 
     checkbox.addEventListener("change", toggle);
@@ -171,8 +230,11 @@ function init() {
     day: "numeric",
   });
 
-  renderList(document.getElementById("am-list"), am, state, todayKey);
-  renderList(document.getElementById("pm-list"), pm, state, todayKey);
+  renderList(document.getElementById("am-list"), am, state, todayKey, am, pm);
+  renderList(document.getElementById("pm-list"), pm, state, todayKey, am, pm);
+
+  const completedDays = updateCompletionRecord(todayKey, state, am, pm);
+  renderStreak(computeStreak(completedDays));
 }
 
 init();
