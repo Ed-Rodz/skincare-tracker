@@ -36,6 +36,10 @@ Just open `index.html` in a browser — no server required.
 
 Hosted via GitHub Pages, served from the `main` branch. Pushing to `main` redeploys automatically (usually live within about a minute).
 
+## Changelog
+
+See [CHANGELOG.md](./CHANGELOG.md) for a plain-English history of what's shipped.
+
 ## Ideas for v2
 
 - Clear out old daily progress entries from `localStorage` automatically
