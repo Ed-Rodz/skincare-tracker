@@ -1,0 +1,212 @@
+:root {
+  --bg: #faf7f5;
+  --card-bg: #ffffff;
+  --text: #2b2b2b;
+  --muted: #8a8580;
+  --border: #e8e2dd;
+  --accent-am: #e8a33d;
+  --accent-pm: #6b7cbf;
+  --done: #7fb069;
+  --hover-bg: #f5f2ef;
+  --done-bg: #f1f7ed;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #17161a;
+    --card-bg: #221f26;
+    --text: #ece8e4;
+    --muted: #9a958f;
+    --border: #34303a;
+    --accent-am: #f0b45e;
+    --accent-pm: #8b9be0;
+    --done: #8fc774;
+    --hover-bg: #2a2730;
+    --done-bg: #223022;
+  }
+}
+
+:root[data-theme="dark"] {
+  --bg: #17161a;
+  --card-bg: #221f26;
+  --text: #ece8e4;
+  --muted: #9a958f;
+  --border: #34303a;
+  --accent-am: #f0b45e;
+  --accent-pm: #8b9be0;
+  --done: #8fc774;
+  --hover-bg: #2a2730;
+  --done-bg: #223022;
+}
+
+:root[data-theme="light"] {
+  --bg: #faf7f5;
+  --card-bg: #ffffff;
+  --text: #2b2b2b;
+  --muted: #8a8580;
+  --border: #e8e2dd;
+  --accent-am: #e8a33d;
+  --accent-pm: #6b7cbf;
+  --done: #7fb069;
+  --hover-bg: #f5f2ef;
+  --done-bg: #f1f7ed;
+}
+
+body {
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  padding: 24px 16px 64px;
+}
+
+header {
+  position: relative;
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+#theme-toggle {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--card-bg);
+  color: var(--text);
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#theme-toggle:hover {
+  background: var(--hover-bg);
+}
+
+header h1 {
+  margin: 0 0 4px;
+  font-size: 1.6rem;
+}
+
+#today-date {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+main {
+  max-width: 480px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.routine {
+  background: var(--card-bg);
+  border-radius: 14px;
+  padding: 16px 18px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  border: 1px solid var(--border);
+}
+
+.routine h2 {
+  margin: 0 0 12px;
+  font-size: 1.1rem;
+}
+
+#am-section h2 {
+  color: var(--accent-am);
+}
+
+#pm-section h2 {
+  color: var(--accent-pm);
+}
+
+.checklist {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.checklist li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.checklist li:hover {
+  background: var(--hover-bg);
+}
+
+.checklist li.done {
+  background: var(--done-bg);
+  border-color: var(--done);
+}
+
+.checklist li.done .step-name {
+  text-decoration: line-through;
+  color: var(--muted);
+}
+
+.checklist input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  margin-top: 2px;
+  accent-color: var(--done);
+  cursor: pointer;
+}
+
+.step-text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.step-name {
+  font-weight: 600;
+  font-size: 0.98rem;
+}
+
+.step-note {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--accent-am);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+#pm-section .step-note {
+  color: var(--accent-pm);
+}
+
+.step-instructions {
+  font-size: 0.85rem;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+.checklist li.done .step-instructions {
+  text-decoration: line-through;
+}
